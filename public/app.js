@@ -33,6 +33,7 @@ const submitBtnText = document.getElementById('submitBtnText');
 const userVoteStatus = document.getElementById('userVoteStatus');
 const votedNameTag = document.getElementById('votedNameTag');
 const btnEditMyVote = document.getElementById('btnEditMyVote');
+const btnNewVote = document.getElementById('btnNewVote');
 
 const totalVotersCount = document.getElementById('totalVotersCount');
 const topDayName = document.getElementById('topDayName');
@@ -424,8 +425,9 @@ btnSubmitVote.addEventListener('click', async (e) => {
       localStorage.setItem('keo_nhau_my_name', name);
       localStorage.setItem('keo_nhau_my_avatar', state.selectedAvatar);
       localStorage.setItem('keo_nhau_my_note', userNoteInput.value.trim());
+      localStorage.setItem('keo_nhau_my_days', JSON.stringify(Array.from(state.selectedDays)));
 
-      showToast(`🎉 Chúc mừng ${name}! Phiếu vote đã được chốt thành công!`, 'success');
+      showToast(`🎉 Chúc mừng ${name}! Phiếu vote đã được lưu thành công!`, 'success');
       triggerConfetti();
       checkExistingUserVote();
     } else {
@@ -436,40 +438,113 @@ btnSubmitVote.addEventListener('click', async (e) => {
     showToast('Không thể kết nối máy chủ. Vui lòng thử lại!', 'info');
   } finally {
     btnSubmitVote.disabled = false;
-    submitBtnText.textContent = 'Xác Nhận Chốt Kèo';
   }
 });
 
+// KHÔI PHỤC VÀ HIỂN THỊ ĐÚNG THÔNG TIN CŨ KHI VÀO LẠI LINK
 function checkExistingUserVote() {
   const savedId = localStorage.getItem('keo_nhau_my_vote_id');
   const savedName = localStorage.getItem('keo_nhau_my_name');
 
-  if (savedId && state.votes) {
-    const found = state.votes.find(v => v.id === savedId || (savedName && v.name.toLowerCase() === savedName.toLowerCase()));
-    if (found) {
-      userVoteStatus.classList.remove('hidden');
-      votedNameTag.textContent = `${found.avatar || '🍺'} ${found.name}`;
-      submitBtnText.textContent = 'Cập Nhật Phiếu Của Tôi';
-    }
+  if (!state.votes || state.votes.length === 0) return;
+
+  // Tìm phiếu cũ theo ID hoặc Tên
+  const found = state.votes.find(v => 
+    (savedId && v.id === savedId) || 
+    (savedName && v.name.toLowerCase() === savedName.toLowerCase())
+  );
+
+  if (found) {
+    state.myVoteId = found.id;
+    localStorage.setItem('keo_nhau_my_vote_id', found.id);
+    localStorage.setItem('keo_nhau_my_name', found.name);
+    localStorage.setItem('keo_nhau_my_avatar', found.avatar || '🍺');
+    localStorage.setItem('keo_nhau_my_note', found.note || '');
+    localStorage.setItem('keo_nhau_my_days', JSON.stringify(found.selectedDays || []));
+
+    // 1. Điền lại đúng tên cũ
+    userNameInput.value = found.name;
+
+    // 2. Điền lại đúng ghi chú cũ
+    userNoteInput.value = found.note || '';
+
+    // 3. Khôi phục đúng avatar cũ
+    state.selectedAvatar = found.avatar || '🍺';
+    currentAvatarEmoji.textContent = state.selectedAvatar;
+
+    // 4. Tick đúng lại các ngày cũ đã chọn
+    state.selectedDays = new Set(found.selectedDays || []);
+    updateDayCheckboxesVisuals();
+
+    // 5. Hiển thị thông báo trạng thái & đổi tên nút thành cập nhật
+    userVoteStatus.classList.remove('hidden');
+    votedNameTag.textContent = `${found.avatar || '🍺'} ${found.name} (${state.selectedDays.size} ngày đã chọn)`;
+    submitBtnText.textContent = '💾 Cập Nhật Phiếu Của Tôi';
   }
 }
 
+// Bấm nút "Nạp lại" phiếu cũ
 btnEditMyVote.addEventListener('click', () => {
-  const savedId = localStorage.getItem('keo_nhau_my_vote_id');
-  const savedName = localStorage.getItem('keo_nhau_my_name');
-  const found = state.votes.find(v => v.id === savedId || (savedName && v.name.toLowerCase() === savedName.toLowerCase()));
+  checkExistingUserVote();
+  userNameInput.scrollIntoView({ behavior: 'smooth' });
+  showToast('✏️ Đã nạp lại chính xác thông tin phiếu của bạn!', 'info');
+});
 
-  if (found) {
-    userNameInput.value = found.name;
-    userNoteInput.value = found.note || '';
-    state.selectedAvatar = found.avatar || '🍺';
-    currentAvatarEmoji.textContent = state.selectedAvatar;
-    state.selectedDays = new Set(found.selectedDays || []);
+// Bấm nút "Đổi người khác" / "Tạo phiếu mới"
+if (btnNewVote) {
+  btnNewVote.addEventListener('click', () => {
+    state.myVoteId = null;
+    localStorage.removeItem('keo_nhau_my_vote_id');
+    localStorage.removeItem('keo_nhau_my_name');
+    localStorage.removeItem('keo_nhau_my_avatar');
+    localStorage.removeItem('keo_nhau_my_note');
+    localStorage.removeItem('keo_nhau_my_days');
+
+    userNameInput.value = '';
+    userNoteInput.value = '';
+    state.selectedAvatar = '🍺';
+    currentAvatarEmoji.textContent = '🍺';
+    state.selectedDays.clear();
     updateDayCheckboxesVisuals();
-    userNameInput.scrollIntoView({ behavior: 'smooth' });
+
+    userVoteStatus.classList.add('hidden');
+    submitBtnText.textContent = 'Xác Nhận Chốt Kèo';
     userNameInput.focus();
-    showToast('✏️ Bạn đang chỉnh sửa phiếu vote của mình', 'info');
-  }
+    showToast('👋 Đã chuyển sang chế độ bỏ phiếu cho người mới!', 'info');
+  });
+}
+
+// TỰ ĐỘNG TÌM VÀ KHÔI PHỤC KHI NGƯỜI DÙNG NHẬP LẠI TÊN (Kể cả vào từ thiết bị khác)
+let nameLookupTimer = null;
+userNameInput.addEventListener('input', () => {
+  clearTimeout(nameLookupTimer);
+  nameLookupTimer = setTimeout(() => {
+    const inputVal = userNameInput.value.trim().toLowerCase();
+    if (!inputVal || !state.votes) return;
+
+    // Kiểm tra tên này đã từng vote chưa
+    const match = state.votes.find(v => v.name.toLowerCase() === inputVal);
+    if (match && match.id !== state.myVoteId) {
+      state.myVoteId = match.id;
+      localStorage.setItem('keo_nhau_my_vote_id', match.id);
+      localStorage.setItem('keo_nhau_my_name', match.name);
+      localStorage.setItem('keo_nhau_my_avatar', match.avatar || '🍺');
+      localStorage.setItem('keo_nhau_my_note', match.note || '');
+      localStorage.setItem('keo_nhau_my_days', JSON.stringify(match.selectedDays || []));
+
+      userNoteInput.value = match.note || '';
+      state.selectedAvatar = match.avatar || '🍺';
+      currentAvatarEmoji.textContent = state.selectedAvatar;
+      state.selectedDays = new Set(match.selectedDays || []);
+      updateDayCheckboxesVisuals();
+
+      userVoteStatus.classList.remove('hidden');
+      votedNameTag.textContent = `${match.avatar || '🍺'} ${match.name} (${state.selectedDays.size} ngày)`;
+      submitBtnText.textContent = '💾 Cập Nhật Phiếu Của Tôi';
+
+      showToast(`👋 Chào ${match.name}! Hệ thống đã nhận diện và tự động tick lại các ngày bạn đã chọn trước đó!`, 'info');
+    }
+  }, 400);
 });
 
 // Quick Selection Buttons
@@ -720,12 +795,10 @@ function triggerConfetti() {
   render();
 }
 
-// Pre-fill user name if previously saved
+// Pre-fill user inputs and checked days immediately from localStorage if previously voted
 window.addEventListener('DOMContentLoaded', () => {
   initBubbles();
   renderDaysCheckboxes();
-  fetchPollData();
-  initWebSocket();
 
   const savedName = localStorage.getItem('keo_nhau_my_name');
   if (savedName) {
@@ -736,4 +809,21 @@ window.addEventListener('DOMContentLoaded', () => {
     state.selectedAvatar = savedAvatar;
     currentAvatarEmoji.textContent = savedAvatar;
   }
+  const savedNote = localStorage.getItem('keo_nhau_my_note');
+  if (savedNote) {
+    userNoteInput.value = savedNote;
+  }
+  const savedDays = localStorage.getItem('keo_nhau_my_days');
+  if (savedDays) {
+    try {
+      const parsedDays = JSON.parse(savedDays);
+      if (Array.isArray(parsedDays) && parsedDays.length > 0) {
+        state.selectedDays = new Set(parsedDays);
+        updateDayCheckboxesVisuals();
+      }
+    } catch (e) {}
+  }
+
+  fetchPollData();
+  initWebSocket();
 });
