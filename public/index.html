@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍻 Kèo Nhậu Cuối Tuần - Vote Ngày Đẹp (19/10 - 25/10/2026)</title>
+  <meta name="description" content="Trang web biểu quyết kèo nhậu nhanh chóng, thời gian thực cho tuần từ 19/10/2026 đến 25/10/2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Floating Beer Bubbles Background -->
+  <div class="bubbles-bg" id="bubblesBg"></div>
+
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <span class="brand-icon">🍻</span>
+        <div>
+          <h1 class="brand-title">KÈO NHẬU ANH EM</h1>
+          <p class="brand-subtitle">Biểu quyết chọn ngày hoàng đạo từ 19/10 đến 25/10/2026</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <div class="live-badge" title="Số người đang trực tuyến cùng lúc">
+          <span class="live-dot"></span>
+          <span id="onlineCountText">1</span> đang online
+        </div>
+        <button class="btn btn-share" id="btnShareLink" title="Sao chép link gửi cho bạn bè">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          <span>Chia sẻ Link</span>
+        </button>
+        <button class="btn btn-outline" id="btnShowQr" title="Hiện mã QR để quét điện thoại">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Mã QR</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+
+      <!-- TOP BANNER HIGHLIGHT -->
+      <section class="hero-card">
+        <div class="hero-left">
+          <span class="pill-badge">🔥 BÌNH CHỌN LỊCH UỐNG BIA</span>
+          <h2 class="hero-heading">Tuần 19/10 - 25/10/2026 Đi Ngày Nào Hợp Nhất?</h2>
+          <p class="hero-desc">Nhập tên của bạn ở dưới và tick chọn những ngày bạn rảnh. Dữ liệu được đồng bộ trực tiếp tức thời cho tất cả mọi người mà không cần tải lại trang!</p>
+          
+          <div class="quick-stats">
+            <div class="stat-item">
+              <span class="stat-num" id="totalVotersCount">0</span>
+              <span class="stat-lbl">Anh em đã vote</span>
+            </div>
+            <div class="stat-item highlight">
+              <span class="stat-num" id="topDayName">Chưa có</span>
+              <span class="stat-lbl">Ngày Hot nhất 🔥</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num" id="topDayVotes">0 phiếu</span>
+              <span class="stat-lbl">Kỷ lục phiếu</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-actions-right">
+          <button class="btn btn-subtle" id="btnCopySummary">
+            📋 Sao chép tóm tắt gửi Zalo
+          </button>
+          <button class="btn btn-subtle" id="btnSampleData" title="Nạp 5 thành viên mẫu để xem thử">
+            🎲 Nạp dữ liệu mẫu
+          </button>
+        </div>
+      </section>
+
+      <!-- SECTION: VOTE FORM (YÊU CẦU: TEXTBOX NHẬP TÊN Ở TRÊN, CHECKBOX CÁC NGÀY Ở DƯỚI) -->
+      <section class="card form-card" id="formSection">
+        <div class="card-header">
+          <div class="card-header-title">
+            <span class="step-num">1</span>
+            <div>
+              <h3>Bỏ Phiếu Điểm Danh</h3>
+              <p>Nhập họ tên và chọn các ngày từ 19/10 đến 25/10 bạn có thể tham gia</p>
+            </div>
+          </div>
+          <div id="userVoteStatus" class="user-status-tag hidden">
+            <span>✅ Bạn đã vote: <strong id="votedNameTag">...</strong></span>
+            <button id="btnEditMyVote" class="btn-text">Sửa phiếu</button>
+          </div>
+        </div>
+
+        <form id="voteForm" class="vote-form" onsubmit="return false;">
+          <!-- 1. TEXTBOX NHẬP TÊN Ở PHÍA TRÊN -->
+          <div class="form-group name-group">
+            <label for="userNameInput" class="form-label">
+              <span class="label-text">Họ và tên / Biệt danh của bạn <span class="required">*</span></span>
+              <span class="label-hint">Nhập để anh em biết ai tham gia</span>
+            </label>
+            <div class="name-input-wrapper">
+              <div class="avatar-dropdown" id="avatarPickerContainer">
+                <button type="button" class="avatar-picker-btn" id="selectedAvatarBtn" title="Chọn biểu tượng của bạn">
+                  <span id="currentAvatarEmoji">🍺</span>
+                  <span class="avatar-caret">▼</span>
+                </button>
+                <div class="avatar-dropdown-menu hidden" id="avatarMenu">
+                  <div class="avatar-grid">
+                    <span class="avatar-opt active" data-emoji="🍺" title="Bia cốc">🍺</span>
+                    <span class="avatar-opt" data-emoji="🍻" title="Nâng ly">🍻</span>
+                    <span class="avatar-opt" data-emoji="🥩" title="Thịt nướng">🥩</span>
+                    <span class="avatar-opt" data-emoji="🍗" title="Mồi bén">🍗</span>
+                    <span class="avatar-opt" data-emoji="🍹" title="Cocktail/Rượu nhẹ">🍹</span>
+                    <span class="avatar-opt" data-emoji="🥳" title="Quẩy sung">🥳</span>
+                    <span class="avatar-opt" data-emoji="👑" title="Chủ xị / Trùm">👑</span>
+                    <span class="avatar-opt" data-emoji="😎" title="Dân chơi">😎</span>
+                    <span class="avatar-opt" data-emoji="🚗" title="Tài xế tỉnh táo">🚗</span>
+                    <span class="avatar-opt" data-emoji="🧃" title="Trà đá / Nước ngọt">🧃</span>
+                  </div>
+                </div>
+              </div>
+              <input 
+                type="text" 
+                id="userNameInput" 
+                class="form-control form-control-lg" 
+                placeholder="Ví dụ: Tuấn Khang, Nam Râu, Hùng IT..." 
+                maxlength="50" 
+                required 
+                autocomplete="name"
+              >
+            </div>
+          </div>
+
+          <!-- LỜI NHẮN / GỢI Ý QUÁN (NỘI DUNG) -->
+          <div class="form-group">
+            <label for="userNoteInput" class="form-label">
+              <span class="label-text">Lời nhắn / Đề xuất quán / Ghi chú tửu lượng <span class="optional">(không bắt buộc)</span></span>
+            </label>
+            <input 
+              type="text" 
+              id="userNoteInput" 
+              class="form-control" 
+              placeholder="Ví dụ: Đề xuất Lẩu Dê 304, em uống được 5 lon, thứ 6 đến muộn 20p..." 
+              maxlength="200"
+            >
+          </div>
+
+          <!-- 2. PHÍA DƯỚI LÀ TICK VÀO CÁC NGÀY TRONG TUẦN (19/10/2026 ĐẾN 25/10/2026) -->
+          <div class="form-group days-group">
+            <div class="days-header">
+              <label class="form-label mb-0">
+                <span class="label-text">Tick chọn những ngày bạn có thể đi (19/10/2026 - 25/10/2026) <span class="required">*</span></span>
+              </label>
+              <div class="quick-select-btns">
+                <button type="button" class="btn-chip" id="btnSelectAll">Chọn cả 7 ngày</button>
+                <button type="button" class="btn-chip" id="btnSelectWeekend">Chỉ Cuối tuần (T6, T7, CN)</button>
+                <button type="button" class="btn-chip" id="btnClearDays">Bỏ chọn</button>
+              </div>
+            </div>
+
+            <!-- 7 NGÀY CHECKBOX CARDS -->
+            <div class="days-grid" id="daysCheckboxesList">
+              <!-- Sẽ được render động từ danh sách 19/10 đến 25/10/2026 -->
+            </div>
+          </div>
+
+          <!-- SUBMIT ACTION BUTTON -->
+          <div class="form-submit-row">
+            <button type="submit" class="btn btn-primary btn-lg" id="btnSubmitVote">
+              <span class="btn-icon">🍻</span>
+              <span id="submitBtnText">Xác Nhận Chốt Kèo</span>
+            </button>
+            <span class="submit-note">Tự động cập nhật tức thì đến tất cả mọi người</span>
+          </div>
+        </form>
+      </section>
+
+      <!-- SECTION: BẢNG THỐNG KÊ CHI TIẾT & BÌNH CHỌN CỦA ANH EM -->
+      <section class="card results-card" id="resultsSection">
+        <div class="card-header">
+          <div class="card-header-title">
+            <span class="step-num">2</span>
+            <div>
+              <h3>Bảng Thống Kê & Người Tham Gia</h3>
+              <p>Xem số lượng vote từng ngày và thông tin anh em đã đăng ký</p>
+            </div>
+          </div>
+          <div class="view-toggles">
+            <button class="toggle-btn active" id="btnViewCards">Dạng Thẻ</button>
+            <button class="toggle-btn" id="btnViewMatrix">Bảng Tổng Hợp</button>
+          </div>
+        </div>
+
+        <!-- VIEW 1: DAY CARDS WITH VOTER BADGES & PROGRESS -->
+        <div id="cardsViewContainer" class="days-results-list">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- VIEW 2: ATTENDANCE MATRIX (NGƯỜI DÙNG XEM CỤ THỂ AI VOTE NGÀY NÀO) -->
+        <div id="matrixViewContainer" class="matrix-table-wrapper hidden">
+          <table class="matrix-table" id="matrixTable">
+            <thead>
+              <tr>
+                <th>Thành viên</th>
+                <th>T2 (19/10)</th>
+                <th>T3 (20/10)</th>
+                <th>T4 (21/10)</th>
+                <th>T5 (22/10)</th>
+                <th>T6 (23/10)</th>
+                <th>T7 (24/10)</th>
+                <th>CN (25/10)</th>
+                <th>Lời nhắn</th>
+              </tr>
+            </thead>
+            <tbody id="matrixTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION: RECENT LIVE FEED -->
+      <section class="card feed-card">
+        <div class="feed-header">
+          <span class="feed-icon">⚡</span>
+          <h4>Nhật Ký Kèo Nhậu (Trực Tiếp)</h4>
+        </div>
+        <div class="feed-list" id="feedList">
+          <div class="feed-empty">Chưa có hoạt động nào gần đây. Hãy là người đầu tiên vote!</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- QR CODE MODAL -->
+  <div class="modal-backdrop hidden" id="qrModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Quét Mã QR Tham Gia Vote</h3>
+        <button class="modal-close" id="btnCloseQr">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="qr-container">
+          <img id="qrImage" src="" alt="QR Code Link">
+        </div>
+        <p class="qr-url" id="qrUrlDisplay"></p>
+        <p class="qr-hint">Mở Camera điện thoại hoặc Zalo quét để vào trang vote ngay lập tức!</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btnCopyFromModal">Sao chép Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- CONFETTI CANVAS -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>🍻 Kèo Nhậu Tuần 19/10 - 25/10/2026 • Hệ thống Real-time tốc độ cao hỗ trợ 100+ người cùng lúc</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

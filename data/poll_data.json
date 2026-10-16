@@ -1,0 +1,122 @@
+{
+  "title": "Kèo Nhậu Bất Diệt - Tuần 19/10 đến 25/10/2026 🍻",
+  "description": "Anh em chọn ngày rảnh để ban tổ chức chốt quán và đặt bàn!",
+  "days": [
+    {
+      "id": "2026-10-19",
+      "label": "Thứ Hai",
+      "dateStr": "19/10/2026",
+      "subtitle": "Khởi động tuần mới"
+    },
+    {
+      "id": "2026-10-20",
+      "label": "Thứ Ba",
+      "dateStr": "20/10/2026",
+      "subtitle": "Giải tỏa áp lực"
+    },
+    {
+      "id": "2026-10-21",
+      "label": "Thứ Tư",
+      "dateStr": "21/10/2026",
+      "subtitle": "Giữa tuần lai rai"
+    },
+    {
+      "id": "2026-10-22",
+      "label": "Thứ Năm",
+      "dateStr": "22/10/2026",
+      "subtitle": "Chuẩn bị cuối tuần"
+    },
+    {
+      "id": "2026-10-23",
+      "label": "Thứ Sáu",
+      "dateStr": "23/10/2026",
+      "subtitle": "Quẩy hết nấc (TGIF) 🔥"
+    },
+    {
+      "id": "2026-10-24",
+      "label": "Thứ Bảy",
+      "dateStr": "24/10/2026",
+      "subtitle": "Uống không say không về 🍻"
+    },
+    {
+      "id": "2026-10-25",
+      "label": "Chủ Nhật",
+      "dateStr": "25/10/2026",
+      "subtitle": "Nghỉ dưỡng nạp năng lượng"
+    }
+  ],
+  "votes": [
+    {
+      "id": "sample_1",
+      "name": "Tuấn Cận",
+      "avatar": "🍺",
+      "selectedDays": [
+        "2026-10-23",
+        "2026-10-24"
+      ],
+      "note": "Thứ 6 tan làm là quất luôn",
+      "createdAt": "2026-10-16T03:08:11.850Z",
+      "updatedAt": "2026-10-16T03:08:11.850Z"
+    },
+    {
+      "id": "sample_2",
+      "name": "Huy Ba Gác",
+      "avatar": "🍻",
+      "selectedDays": [
+        "2026-10-21",
+        "2026-10-23",
+        "2026-10-24"
+      ],
+      "note": "Bao nhiêu cữ cũng chiều",
+      "createdAt": "2026-10-16T03:08:11.850Z",
+      "updatedAt": "2026-10-16T03:08:11.850Z"
+    },
+    {
+      "id": "sample_3",
+      "name": "Linh Răng Khểnh",
+      "avatar": "🍹",
+      "selectedDays": [
+        "2026-10-23",
+        "2026-10-25"
+      ],
+      "note": "Ăn mồi là chính, uống 1 lon",
+      "createdAt": "2026-10-16T03:08:11.850Z",
+      "updatedAt": "2026-10-16T03:08:11.850Z"
+    },
+    {
+      "id": "sample_4",
+      "name": "Hoàng Trùm Nướng",
+      "avatar": "🥩",
+      "selectedDays": [
+        "2026-10-22",
+        "2026-10-23",
+        "2026-10-24"
+      ],
+      "note": "Gợi ý quán Lẩu Bò Nhà Gỗ",
+      "createdAt": "2026-10-16T03:08:11.850Z",
+      "updatedAt": "2026-10-16T03:08:11.850Z"
+    },
+    {
+      "id": "sample_5",
+      "name": "Sếp Dũng",
+      "avatar": "👑",
+      "selectedDays": [
+        "2026-10-24"
+      ],
+      "note": "Thứ 7 anh tài trợ 50% bill!",
+      "createdAt": "2026-10-16T03:08:11.850Z",
+      "updatedAt": "2026-10-16T03:08:11.850Z"
+    },
+    {
+      "id": "v_1792120367088_p9kr0o",
+      "name": "Agent Test",
+      "avatar": "👑",
+      "selectedDays": [
+        "2026-10-23"
+      ],
+      "note": "De xuat quan moi, uong het minh",
+      "createdAt": "2026-10-16T03:12:47.088Z",
+      "updatedAt": "2026-10-16T03:18:10.095Z"
+    }
+  ]
+}
