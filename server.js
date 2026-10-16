@@ -223,35 +223,7 @@ app.delete('/api/vote/:id', (req, res) => {
   return res.status(404).json({ success: false, error: 'Không tìm thấy phiếu vote' });
 });
 
-// Reset demo votes / seed data (optional utility)
-app.post('/api/seed', (req, res) => {
-  const sampleUsers = [
-    { name: 'Tuấn Cận', avatar: '🍺', selectedDays: ['2026-10-23', '2026-10-24'], note: 'Thứ 6 tan làm là quất luôn' },
-    { name: 'Huy Ba Gác', avatar: '🍻', selectedDays: ['2026-10-21', '2026-10-23', '2026-10-24'], note: 'Bao nhiêu cữ cũng chiều' },
-    { name: 'Linh Răng Khểnh', avatar: '🍹', selectedDays: ['2026-10-23', '2026-10-25'], note: 'Ăn mồi là chính, uống 1 lon' },
-    { name: 'Hoàng Trùm Nướng', avatar: '🥩', selectedDays: ['2026-10-22', '2026-10-23', '2026-10-24'], note: 'Gợi ý quán Lẩu Bò Nhà Gỗ' },
-    { name: 'Sếp Dũng', avatar: '👑', selectedDays: ['2026-10-24'], note: 'Thứ 7 anh tài trợ 50% bill!' }
-  ];
 
-  pollState.votes = sampleUsers.map((u, i) => ({
-    id: 'sample_' + (i + 1),
-    name: u.name,
-    avatar: u.avatar,
-    selectedDays: u.selectedDays,
-    note: u.note,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  }));
-
-  persistPollState();
-
-  broadcast({
-    type: 'VOTE_RESET',
-    data: { allVotes: pollState.votes }
-  });
-
-  res.json({ success: true, count: pollState.votes.length });
-});
 
 // Clear all votes
 app.post('/api/clear', (req, res) => {

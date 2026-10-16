@@ -56,7 +56,7 @@ const qrImage = document.getElementById('qrImage');
 const qrUrlDisplay = document.getElementById('qrUrlDisplay');
 const btnCopyFromModal = document.getElementById('btnCopyFromModal');
 const btnCopySummary = document.getElementById('btnCopySummary');
-const btnSampleData = document.getElementById('btnSampleData');
+const btnExportCsv = document.getElementById('btnExportCsv');
 
 // Quick Select
 const btnSelectAll = document.getElementById('btnSelectAll');
@@ -583,18 +583,29 @@ btnCopySummary.addEventListener('click', () => {
   });
 });
 
-// Seed sample data for preview
-btnSampleData.addEventListener('click', async () => {
-  try {
-    const res = await fetch('/api/seed', { method: 'POST' });
-    const data = await res.json();
-    if (data.success) {
-      showToast('🎲 Đã nạp 5 thành viên mẫu!', 'success');
+// Export attendance to CSV / Excel
+if (btnExportCsv) {
+  btnExportCsv.addEventListener('click', () => {
+    if (state.votes.length === 0) {
+      showToast('⚠️ Hiện chưa có ai vote để xuất danh sách!', 'info');
+      return;
     }
-  } catch (err) {
-    showToast('Lỗi khi nạp mẫu', 'info');
-  }
-});
+    let csv = '\uFEFFHọ và tên,Biểu tượng,Lời nhắn / Quán gợi ý,Thứ Hai (19/10),Thứ Ba (20/10),Thứ Tư (21/10),Thứ Năm (22/10),Thứ Sáu (23/10),Thứ Bảy (24/10),Chủ Nhật (25/10),Thời gian cập nhật\n';
+    state.votes.forEach(v => {
+      const dayStatus = state.days.map(d => (v.selectedDays && v.selectedDays.includes(d.id)) ? 'Có' : 'Không');
+      const cleanNote = (v.note || '').replace(/"/g, '""');
+      csv += `"${v.name}","${v.avatar || '🍺'}","${cleanNote}",${dayStatus.map(s => `"${s}"`).join(',')},"${v.updatedAt || ''}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `danh_sach_keo_nhau_19_25_10_2026.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('📊 Đã tải file danh sách Excel thành công!', 'success');
+  });
+}
 
 // ==========================================
 // 8. TOAST & CONFETTI UTILITIES
