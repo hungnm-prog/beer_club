@@ -47,17 +47,6 @@
   ],
   "votes": [
     {
-      "id": "v_1792121266602_tkjvn3",
-      "name": "Hưng Nguyễn",
-      "avatar": "🍺",
-      "selectedDays": [
-        "2026-10-23"
-      ],
-      "note": "",
-      "createdAt": "2026-10-16T03:27:46.601Z",
-      "updatedAt": "2026-10-16T03:27:52.764Z"
-    },
-    {
       "id": "v_1792121441606_9v807l",
       "name": "tngan",
       "avatar": "🍺",
@@ -102,6 +91,29 @@
       "updatedAt": "2026-10-16T03:32:13.201Z"
     },
     {
+      "id": "v_1792121890126_km642z",
+      "name": "Uyên",
+      "avatar": "🍺",
+      "selectedDays": [
+        "2026-10-19",
+        "2026-10-20"
+      ],
+      "note": "quán Vại, uống 5 lon nước ngọt",
+      "createdAt": "2026-10-16T03:38:10.126Z",
+      "updatedAt": "2026-10-16T03:38:10.126Z"
+    },
+    {
+      "id": "v_1792121266602_tkjvn3",
+      "name": "Hưng Nguyễn",
+      "avatar": "🍺",
+      "selectedDays": [
+        "2026-10-23"
+      ],
+      "note": "",
+      "createdAt": "2026-10-16T03:39:09.286Z",
+      "updatedAt": "2026-10-16T03:39:09.286Z"
+    },
+    {
       "id": "v_1792121723141_fn6rq3",
       "name": "Niiii",
       "avatar": "🍺",
@@ -110,8 +122,8 @@
         "2026-10-22"
       ],
       "note": "Đi ăn rồi kara",
-      "createdAt": "2026-10-16T03:35:23.141Z",
-      "updatedAt": "2026-10-16T03:35:23.141Z"
+      "createdAt": "2026-10-16T03:39:09.293Z",
+      "updatedAt": "2026-10-16T03:39:09.293Z"
     },
     {
       "id": "v_1792120367088_p9kr0o",
@@ -121,8 +133,8 @@
         "2026-10-23"
       ],
       "note": "Quan Bia Ha Noi 304",
-      "createdAt": "2026-10-16T03:35:39.664Z",
-      "updatedAt": "2026-10-16T03:35:39.664Z"
+      "createdAt": "2026-10-16T03:39:09.295Z",
+      "updatedAt": "2026-10-16T03:39:09.295Z"
     }
   ]
 }

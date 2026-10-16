@@ -203,22 +203,23 @@ app.post('/api/vote', (req, res) => {
   });
 });
 
-// Remove a vote
+// Remove a vote by ID or Name
 app.delete('/api/vote/:id', (req, res) => {
   const { id } = req.params;
-  const idx = pollState.votes.findIndex(v => v.id === id);
+  const decoded = decodeURIComponent(id).trim().toLowerCase();
+  const idx = pollState.votes.findIndex(v => v.id === id || v.name.toLowerCase() === decoded);
   if (idx >= 0) {
     const removed = pollState.votes.splice(idx, 1)[0];
     persistPollState();
     broadcast({
       type: 'VOTE_DELETED',
       data: {
-        id,
+        id: removed.id,
         allVotes: pollState.votes,
         actor: removed.name
       }
     });
-    return res.json({ success: true, message: 'Đã hủy vote' });
+    return res.json({ success: true, message: `Đã xóa biệt danh ${removed.name}` });
   }
   return res.status(404).json({ success: false, error: 'Không tìm thấy phiếu vote' });
 });

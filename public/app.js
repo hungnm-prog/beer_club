@@ -34,6 +34,8 @@ const userVoteStatus = document.getElementById('userVoteStatus');
 const votedNameTag = document.getElementById('votedNameTag');
 const btnEditMyVote = document.getElementById('btnEditMyVote');
 const btnNewVote = document.getElementById('btnNewVote');
+const btnDeleteNicknameTag = document.getElementById('btnDeleteNicknameTag');
+const btnDeleteNicknameBtn = document.getElementById('btnDeleteNicknameBtn');
 
 const totalVotersCount = document.getElementById('totalVotersCount');
 const topDayName = document.getElementById('topDayName');
@@ -333,8 +335,12 @@ function renderMatrixTable() {
     return;
   }
 
+  const myId = state.myVoteId || localStorage.getItem('keo_nhau_my_vote_id');
+  const myName = (localStorage.getItem('keo_nhau_my_name') || userNameInput.value.trim()).toLowerCase();
+
   state.votes.forEach(vote => {
     const tr = document.createElement('tr');
+    const isMe = (myId && vote.id === myId) || (myName && vote.name.toLowerCase() === myName);
 
     const dayCells = state.days.map(day => {
       const checked = vote.selectedDays && vote.selectedDays.includes(day.id);
@@ -346,6 +352,7 @@ function renderMatrixTable() {
         <div class="matrix-user">
           <span>${vote.avatar || '🍺'}</span>
           <span>${escapeHtml(vote.name)}</span>
+          ${isMe ? `<button type="button" class="btn-text btn-del-row" style="color:#ef4444; margin-left:6px; font-size:0.75rem; text-decoration:none;" title="Xóa biệt danh của bạn" onclick="deleteMyVote()">[Xóa]</button>` : ''}
         </div>
       </td>
       ${dayCells}
@@ -478,6 +485,7 @@ function checkExistingUserVote() {
 
     // 5. Hiển thị thông báo trạng thái & đổi tên nút thành cập nhật
     userVoteStatus.classList.remove('hidden');
+    if (btnDeleteNicknameBtn) btnDeleteNicknameBtn.classList.remove('hidden');
     votedNameTag.textContent = `${found.avatar || '🍺'} ${found.name} (${state.selectedDays.size} ngày đã chọn)`;
     submitBtnText.textContent = '💾 Cập Nhật Phiếu Của Tôi';
   }
@@ -489,6 +497,67 @@ btnEditMyVote.addEventListener('click', () => {
   userNameInput.scrollIntoView({ behavior: 'smooth' });
   showToast('✏️ Đã nạp lại chính xác thông tin phiếu của bạn!', 'info');
 });
+
+// TÍNH NĂNG XÓA BIỆT DANH / HỦY VOTE
+async function deleteMyVote() {
+  const currentName = (userNameInput.value.trim() || localStorage.getItem('keo_nhau_my_name') || '').trim();
+  const targetId = state.myVoteId || localStorage.getItem('keo_nhau_my_vote_id');
+
+  const record = state.votes ? state.votes.find(v => (targetId && v.id === targetId) || (currentName && v.name.toLowerCase() === currentName.toLowerCase())) : null;
+  const displayName = record ? record.name : (currentName || 'này');
+
+  if (!record && !targetId && !currentName) {
+    showToast('⚠️ Không tìm thấy biệt danh cần xóa!', 'info');
+    return;
+  }
+
+  const confirmDelete = window.confirm(`❓ Bạn có chắc chắn muốn xóa biệt danh "${displayName}" và rút khỏi danh sách đi nhậu không?`);
+  if (!confirmDelete) return;
+
+  const identifier = record ? record.id : (targetId || encodeURIComponent(currentName));
+
+  try {
+    const res = await fetch(`/api/vote/${identifier}`, {
+      method: 'DELETE'
+    });
+    const result = await res.json();
+
+    if (result.success) {
+      state.myVoteId = null;
+      localStorage.removeItem('keo_nhau_my_vote_id');
+      localStorage.removeItem('keo_nhau_my_name');
+      localStorage.removeItem('keo_nhau_my_avatar');
+      localStorage.removeItem('keo_nhau_my_note');
+      localStorage.removeItem('keo_nhau_my_days');
+
+      userNameInput.value = '';
+      userNoteInput.value = '';
+      state.selectedAvatar = '🍺';
+      currentAvatarEmoji.textContent = '🍺';
+      state.selectedDays.clear();
+      updateDayCheckboxesVisuals();
+
+      userVoteStatus.classList.add('hidden');
+      if (btnDeleteNicknameBtn) btnDeleteNicknameBtn.classList.add('hidden');
+      submitBtnText.textContent = 'Xác Nhận Chốt Kèo';
+
+      showToast(`🗑️ Đã xóa biệt danh "${displayName}" và rút khỏi kèo thành công!`, 'success');
+    } else {
+      showToast(`Lỗi: ${result.error || 'Không thể xóa'}`, 'info');
+    }
+  } catch (err) {
+    console.error('Error deleting vote:', err);
+    showToast('Không thể kết nối máy chủ để xóa. Vui lòng thử lại!', 'info');
+  }
+}
+window.deleteMyVote = deleteMyVote;
+
+if (btnDeleteNicknameTag) {
+  btnDeleteNicknameTag.addEventListener('click', deleteMyVote);
+}
+if (btnDeleteNicknameBtn) {
+  btnDeleteNicknameBtn.addEventListener('click', deleteMyVote);
+}
 
 // Bấm nút "Đổi người khác" / "Tạo phiếu mới"
 if (btnNewVote) {
@@ -508,6 +577,7 @@ if (btnNewVote) {
     updateDayCheckboxesVisuals();
 
     userVoteStatus.classList.add('hidden');
+    if (btnDeleteNicknameBtn) btnDeleteNicknameBtn.classList.add('hidden');
     submitBtnText.textContent = 'Xác Nhận Chốt Kèo';
     userNameInput.focus();
     showToast('👋 Đã chuyển sang chế độ bỏ phiếu cho người mới!', 'info');

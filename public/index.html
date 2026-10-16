@@ -91,6 +91,7 @@
           <div id="userVoteStatus" class="user-status-tag hidden">
             <span>✅ Đã lưu phiếu: <strong id="votedNameTag">...</strong></span>
             <button type="button" id="btnEditMyVote" class="btn-text">Nạp lại</button>
+            <button type="button" id="btnDeleteNicknameTag" class="btn-text" style="color: #ef4444; margin-left: 10px;" title="Xóa biệt danh và rút khỏi kèo">🗑️ Xóa biệt danh</button>
             <button type="button" id="btnNewVote" class="btn-text" style="color:var(--text-secondary); margin-left: 8px;">Đổi người khác</button>
           </div>
         </div>
@@ -173,6 +174,9 @@
             <button type="submit" class="btn btn-primary btn-lg" id="btnSubmitVote">
               <span class="btn-icon">🍻</span>
               <span id="submitBtnText">Xác Nhận Chốt Kèo</span>
+            </button>
+            <button type="button" class="btn btn-outline hidden" id="btnDeleteNicknameBtn" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4); padding: 12px 18px;" title="Xóa biệt danh của bạn và rút khỏi kèo">
+              <span>🗑️ Xóa Biệt Danh</span>
             </button>
             <span class="submit-note">Tự động cập nhật tức thì đến tất cả mọi người</span>
           </div>
